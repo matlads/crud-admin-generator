@@ -1,37 +1,25 @@
 <?php
 
-/*
- * This file is part of the CRUD Admin Generator project.
- *
- * Author: Jon Segador <jonseg@gmail.com>
- * Web: http://crud-admin-generator.com
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use Doctrine\DBAL\Schema\Table;
 
 
-require('GenerateAdminCommand.php');
+class GenerateAdminCommand extends Command
+{
+  protected $app;
 
-$console = new Application('CRUD Admin Generator command instalation', '1.0');
+  protected function configure()
+  {
+    $this
+      ->setDefinition(array())
+      ->setDescription("Generate administrator");
+  }
 
-$command = new GenerateAdminCommand('generate:admin');
-$command->setApp($app);
-$console->add($command);
-
-/*
-$console
-  ->register('generate:admin')
-  ->setDefinition(array())
-  ->setDescription("Generate administrator")
-  ->setCode(function (InputInterface $input, OutputInterface $output) use ($app) {
+  protected function execute(InputInterface $input, OutputInterface $output)
+  {
+    // ... put here the code to run in your command
+    $app = $this->app;
 
     $sm = $app['db']->getSchemaManager();
     $tableNames = $sm->listTableNames();
@@ -45,8 +33,25 @@ $console
         echo '  - ' . $column->getName() . "\n";
       }
     }
-    exit;
 
+    // this method must return an integer number with the "exit status code"
+    // of the command. You can also use these constants to make code more readable
+
+    // return this if there was no problem running the command
+    // (it's equivalent to returning int(0))
+    return 0;
+
+    // or return this if some error happened during the execution
+    // (it's equivalent to returning int(1))
+    // return Command::FAILURE;
+  }
+
+  function setApp($app){
+    $this->app = $app;
+  }
+}
+
+/*
     $getTablesQuery = "SHOW TABLES";
     $getTablesResult = $app['db']->fetchAll($getTablesQuery, array());
 
@@ -405,5 +410,3 @@ $console
 
   })
 */
-
-return $console;
